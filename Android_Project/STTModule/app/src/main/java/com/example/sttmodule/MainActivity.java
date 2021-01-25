@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         // xml의 버튼과 텍스트 뷰 연결
         textView = (TextView)findViewById(R.id.sttResult);
         sttBtn = (Button) findViewById(R.id.sttStart);
-        
+
         // RecognizerIntent 객체 생성
         intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,getPackageName());

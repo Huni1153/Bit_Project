@@ -8,16 +8,21 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/sttResult"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="음성인식 결과가 여기에 표시됩니다." />
+        android:text="음성인식을 하려면 버튼을 클릭 하세요." />
 
     <Button
         android:id="@+id/sttStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="음성인식 시작" />
+
+    <TextView
+        android:id="@+id/sttResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
 
 </LinearLayout>
 
