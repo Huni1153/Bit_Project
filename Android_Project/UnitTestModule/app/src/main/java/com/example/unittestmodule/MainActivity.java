@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,10 +40,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private Button btn_Speak;
 
     // 일정관리 변수
+    private Button accountRead_btn;
     private Button eventAdd_btn;
     private EditText eventName_et;
     private EditText eventContent_et;
     private TextView eventList_tv;
+    private int REQUEST_CODE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,8 +91,74 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         this.eventName_et = (EditText) findViewById(R.id.main_et_eventName);
         this.eventContent_et = (EditText) findViewById(R.id.main_et_eventContent);
         this.eventAdd_btn = (Button)findViewById(R.id.main_btn_eventAdd);
+        this.accountRead_btn = (Button)findViewById(R.id.main_btn_accountRead);
         this.eventList_tv = (TextView)findViewById(R.id.main_tv_eventList);
 
+         /* 사용자 계정정보 얻어오기
+                 AccountManager를 통해 핸드폰 안의 사용자 계정을 가지고 온다. */
+        /* ※ android O(오레오)시상 부터는 manifests의 GET_ACCOUNTS 권한만으로는 앱에서 계정정보를 불러올 수 없다...?
+         아니 그럼 api를 수정했어야 되는거 아닙니까?
+         그래서 AccountManager.newChooseAccountIntent() 또는 인증자의 특정한 메소드를 사용해야 한다. 그 후에 AccountManager.getAccounts()를 호출하여 계정에 접근할 수 있다.*/
+        // 결과 : 이부분도 꼭 필요한 부분이다 밑에 intent에서 한번 계정 정보를 불러왔다면 이 코드만으로도 계정 목록을 불러올 수 있다.
+        AccountManager acctMgr = AccountManager.get(this); // 사용자계정 전부를 불러온다.
+        Account[] acctArray = acctMgr.getAccounts(); // 사용자 계정들을 배열에 입력
+        int acctCnt = acctArray.length;
+        String acctName = ""; // 사용자 이름
+        String acctType = ""; // 계정 유형
+        int row = 0; // 반복문에 사용할 변수
+        Account acct; // 필요한 사용자 계정을 입력할 때 쓸 String 변수
+
+                /* AccountManager를 이용해 사용자가 핸드폰에 쓰고 있는 모든 계정, 앱과 연동 되어있는
+                계정들을 전부 불러오고 그걸 Account의 배열에 입력한다. 이를 통해서 필요한 계정정보를 찾을 준비가 됨. */
+
+        // 핸드폰에 어떤 계정이 어떠한 유형으로 있는지 알아보는 코드
+        while( row < acctCnt)
+        {
+            acct = acctArray[row];
+            if(acct.type.equals("com.google"))
+            {
+                acctName = acct.name;
+                acctType = acct.type;
+                break;
+            }
+            row ++;
+        }
+        // Log.i("test","이름 : " + acctName + "계정 유형 : " + acctType);
+        eventList_tv.setText(acctName + " " + acctType);
+
+
+
+        this.accountRead_btn.setOnClickListener(new  View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            public void onClick(View v){
+                chooseAccountIntent();
+            }
+            //  이 부분이 계정 정보를 불러오고나서 계정 목록을 intent로 창을 띄어서 선택 받게 하는 부분 (아마 어플리케이션을 제일 처음 켰을때 해야되는 부분이라고 생각된다.)
+            //  계정정보 불러오는 함수
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            private void chooseAccountIntent() {
+                Intent intent = AccountManager.newChooseAccountIntent(
+                        null, null, new String[]{"com.google"}, null,
+                        null, null, null);
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
+    }
+    // intent에서 선택한 결과를 가져오는 함수
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE) {
+            if (data != null) {
+                Bundle extras = data.getExtras();
+                final String accountName = extras.getString(AccountManager.KEY_ACCOUNT_NAME);
+                final String accountType = extras.getString(AccountManager.KEY_ACCOUNT_TYPE);
+                // Log.d("", "Account Name: " + accountName);
+                // Log.d("", "Account Type: " + accountType);
+                eventList_tv.setText("계정 : " + accountName + "\n유형 : " + accountType);
+            }
+        }
     }
 
     // RecognizerIntent 객체에 할당할 listener 생성
@@ -212,7 +282,4 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             Log.e("TTS", "Initilization Failed!");
         }
     }
-
-
-
 }

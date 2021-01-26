@@ -18,6 +18,9 @@
         </activity>
     </application>
 
+    <!-- 사용자 계정 불러오기 권한 얻기 -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
     <!-- 음성인식 모듈 접근권한 얻기 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -28,7 +31,5 @@
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
 
-    <!-- 사용자 계정 불러오기 권한 얻기 -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
 </manifest>
