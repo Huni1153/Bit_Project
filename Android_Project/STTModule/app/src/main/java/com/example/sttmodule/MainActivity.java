@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // RecognizerIntent 객체에 할당할 listener 생성
+    // RecognizerIntent 객체에 할당할 listener 생성 test
     private RecognitionListener listener = new RecognitionListener()
     {
         @Override

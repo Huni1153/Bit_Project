@@ -50,11 +50,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,getPackageName());
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"ko-KR");
-
+        Log.i("sd","이거 타입 뭐냐 : " + this.getClass().getName());
         // 버튼을 클릭 이벤트 - 객체에 Context와 listener를 할당한 후 실행
         sttBtn.setOnClickListener(v ->
         {
             mRecognizer=SpeechRecognizer.createSpeechRecognizer(this);
+            //Log.i("sd","이거 타입 뭐냐 : " + this.getClass().getName());
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
         });
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private void speakOut()
     {
         CharSequence text = textView.getText();
-        tts.setPitch((float) 0.6);
+        tts.setPitch((float) 1.0);
         tts.setSpeechRate((float) 1.0);
         tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,"id1");
     }
