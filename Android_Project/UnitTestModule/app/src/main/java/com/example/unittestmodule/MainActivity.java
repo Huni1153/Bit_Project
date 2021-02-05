@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private TextToSpeech tts;
     private Button btn_Speak;
 
-    // 일정관리 변수
+    // 일정관리 변수1
     private Button accountRead_btn;
     private Button eventAdd_btn;
     private EditText eventName_et;
