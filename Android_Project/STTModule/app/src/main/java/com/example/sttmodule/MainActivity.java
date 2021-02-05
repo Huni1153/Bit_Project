@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +25,22 @@ public class MainActivity extends AppCompatActivity
     SpeechRecognizer mRecognizer;
     Button sttBtn;
     TextView textView;
-    final int PERMISSION = 1;
+
+    final int PERMISSION_ALL = 1;
+    String[] PERMISSION = {
+            Manifest.permission.INTERNET,
+            Manifest.permission.RECORD_AUDIO,
+    };
 
     @Override protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if ( Build.VERSION.SDK_INT >= 23 )
-        { // 퍼미션 체크
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET, Manifest.permission.RECORD_AUDIO},PERMISSION);
+
+        if (Build.VERSION.SDK_INT >= 23) { // 퍼미션 체크 안드로이드 6.0(api23 이상)에서는 manifest 파일에 기술하는거 이외에, 권한을 요청해야한다.
+            ActivityCompat.requestPermissions(this, PERMISSION, PERMISSION_ALL);
         }
+
         // xml의 버튼과 텍스트 뷰 연결
         textView = (TextView)findViewById(R.id.sttResult);
         sttBtn = (Button) findViewById(R.id.sttStart);
@@ -47,6 +56,14 @@ public class MainActivity extends AppCompatActivity
             mRecognizer=SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
+        });
+        sttBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecognizer=SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
+                mRecognizer.setRecognitionListener(listener);
+                mRecognizer.startListening(intent);
+            }
         });
     }
 

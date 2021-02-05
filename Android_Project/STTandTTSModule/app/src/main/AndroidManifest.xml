@@ -18,7 +18,7 @@
         </activity>
     </application>
 
-    <!-- 음성인식 모듈 접근권한 얻기 -->
+    <!-- 음성인식 모듈 접근권한 얻기1 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
