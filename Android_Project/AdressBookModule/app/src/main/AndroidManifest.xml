@@ -4,13 +4,16 @@
 
 
     <!-- 주소록 정보 퍼미션 -->
-
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <!-- 단말 정보 퍼미션 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+
+    <!-- 전화걸기를 위한 퍼미션 -->
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.DIAL_PHONE"/>
 
     <application
         android:allowBackup="true"
