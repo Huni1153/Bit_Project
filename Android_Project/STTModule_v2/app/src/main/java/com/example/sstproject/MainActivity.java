@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
             txtInMsg.setText(rs[0]+"\r\n"+txtInMsg.getText());
             FuncVoiceOrderCheck(rs[0]);
             mRecognizer.startListening(SttIntent);
-
         }
 
         @Override
