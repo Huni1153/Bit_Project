@@ -22,10 +22,12 @@
         android:id="@+id/main_btn_sttEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="음성인식 시작"
+        android:text="음성인식 종료"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/main_btn_sttStart"
         app:layout_constraintTop_toTopOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
