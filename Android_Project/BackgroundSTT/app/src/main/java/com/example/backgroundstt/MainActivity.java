@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.main_btn_scheduleRead).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.main_btn_scheduleSearch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_CALENDAR,Manifest.permission.READ_CALENDAR},0);
