@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.backgroundstt">
+    <uses-sdk android:minSdkVersion="14" />
+
+    <!-- 캘린더에 접근하여 읽기 쓰기 권한 얻기 -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
 
     <application
         android:allowBackup="true"
@@ -11,16 +16,14 @@
         android:theme="@style/Theme.BackgroundSTT">
         <activity android:name=".ChatActivity"
             android:theme="@style/Transparent">
+
+        </activity>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-        </activity>
-        <activity android:name=".MainActivity">
-
-
         </activity>
     </application>
 
