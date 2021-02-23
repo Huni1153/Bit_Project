@@ -5,6 +5,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,37 +20,37 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String[] EVENT_PROJECTION = new String[]{
-            CalendarContract.Calendars._ID,
-            CalendarContract.Events.DTSTART,
-            CalendarContract.Events.DTEND,
-            CalendarContract.Events.TITLE,
-            CalendarContract.Events.EVENT_LOCATION,
-            CalendarContract.Events.ORGANIZER,
-            CalendarContract.Events._ID,
-            CalendarContract.Events.DESCRIPTION,
-            CalendarContract.Events.DURATION,
-            CalendarContract.Events.SYNC_DATA1,
-            CalendarContract.Events.DIRTY,
-            CalendarContract.Events.UID_2445,
-            CalendarContract.Events.DELETED,
-            CalendarContract.Events.LAST_DATE,
-            CalendarContract.Events.SYNC_DATA2,
-            CalendarContract.Events.ALL_DAY,
-            CalendarContract.Events.RRULE,
-            CalendarContract.Events.STATUS,
-            CalendarContract.Events.RDATE
+            CalendarContract.Calendars._ID,                             // 0
+            CalendarContract.Calendars.ACCOUNT_NAME,                    // 1
+            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,           // 2
+            CalendarContract.Calendars.OWNER_ACCOUNT,                   // 3
+            CalendarContract.Events.CALENDAR_ID,                        // 4
+            CalendarContract.Events._ID,                                // 5
+            CalendarContract.Events.TITLE,                              // 6
+            CalendarContract.Events.DESCRIPTION,                        // 7
+            CalendarContract.Events.DTSTART,                            // 8
+            CalendarContract.Events.DTEND,                              // 9
+            CalendarContract.Events.EVENT_TIMEZONE                      // 10
     };
 
     private static final int PROJECTION_ID_INDEX = 0;
     private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
     private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
     private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
+    private static final int PROJECTION_CALENDAR_ID = 4;
+    private static final int PROJECTION_EVENT_ID = 5;
+    private static final int PROJECTION_EVENT_TITLE = 6;
+    private static final int PROJECTION_EVENT_DESCRIPTION = 7;
+    private static final int PROJECTION_EVENT_DTSTART = 8;
+    private static final int PROJECTION_EVENT_DTEND = 9;
+    private static final int PROJECTION_EVENT_TIMEZONE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +95,9 @@ public class MainActivity extends AppCompatActivity {
                 if(checkPermission() == true)
                 {
                     // 접근 권한이 있다면 기능 수행
-                    eventRead();
+                    //eventRead();
+                    //eventRead2();
+                    test();
                 }
                 else
                 {
@@ -133,23 +137,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void eventAdd()
     {
-         long calID = 3;
+         long calID = 1;
          long startMillis = 0;
          long endMillis = 0;
 
         Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2021, 2, 23, 7, 30);
+        beginTime.set(2021, 2, 25, 7, 30);
         startMillis = beginTime.getTimeInMillis();
+        //Log.d("이거 몇시? : ",startMillis);
         Calendar endTime = Calendar.getInstance();
-        endTime.set(2021, 2, 23, 8, 45);
+        endTime.set(2021, 2, 25, 8, 45);
         endMillis = endTime.getTimeInMillis();
 
         ContentResolver cr = getContentResolver();
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startMillis);
         values.put(CalendarContract.Events.DTEND, endMillis);
-        values.put(CalendarContract.Events.TITLE, "일정 제목");
-        values.put(CalendarContract.Events.DESCRIPTION, "일정 설명");
+        values.put(CalendarContract.Events.TITLE, "대체 어디에 추가 되는거니??");
+        values.put(CalendarContract.Events.DESCRIPTION, "이건 어디에 나오는거고??");
         values.put(CalendarContract.Events.CALENDAR_ID, calID);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Korea");
 
@@ -173,34 +178,124 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALENDAR,Manifest.permission.READ_CALENDAR},12);
         }
         cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
+        if(cur == null || !cur.moveToFirst())
+        {
+            // 디바이스에 캘린더가 존재하지 않음(계정이 등록되어 있지 않음)
+            Toast myToast = Toast.makeText(this.getApplicationContext(),"디바이스에 캘린더가 존재하지 않음", Toast.LENGTH_LONG);
+        }
+
+
 
         while (cur.moveToNext()) {
-            long calID = 0;
+            // Get the field values
+            String calID = null;
             String displayName = null;
             String accountName = null;
             String ownerName = null;
-            String eventTitle = null;
+            String calendarId = null;
             String eventId = null;
-            String startDate = null;
-            String endDate = null;
+            String eventTitle = null;
+            String eventDescription = null;
+            String eventDTStart = null;
+            String eventDTEnd = null;
+            String eventTimeZone = null;
 
-            // Get the field values
-            calID = cur.getLong(PROJECTION_ID_INDEX);
+            calID = cur.getString(PROJECTION_ID_INDEX);
             displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
             accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
             ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
-            eventTitle = cur.getString(cur.getColumnIndex(CalendarContract.Events.TITLE));
-            eventId = cur.getString(cur.getColumnIndex(CalendarContract.Events._ID));
-            startDate = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTSTART));
-            endDate = cur.getString(cur.getColumnIndex(CalendarContract.Events.DTEND));
+            calendarId = cur.getString(PROJECTION_CALENDAR_ID);
+            eventId = cur.getString(PROJECTION_EVENT_ID);
+            eventTitle = cur.getString(PROJECTION_EVENT_TITLE);
+            eventDescription = cur.getString(PROJECTION_EVENT_DESCRIPTION);
+            eventDTStart = cur.getString(PROJECTION_EVENT_DTSTART);
+            eventDTEnd = cur.getString(PROJECTION_EVENT_DTEND);
+            eventTimeZone = cur.getString(PROJECTION_EVENT_TIMEZONE);
 
             // Do something with the values...
             Log.d("데이터 확인", "calId : " + calID);
             Log.d("데이터 확인","displayName : " + displayName);
             Log.d("데이터 확인", "accountName : " + accountName);
             Log.d("데이터 확인","ownerName : " + ownerName);
-            Log.d("Events", "->" + eventTitle + "->" + eventId + "->" + startDate + "->" + endDate);
+            Log.d("데이터 확인","calendarId : " + calendarId);
+            Log.d("데이터 확인","eventId : " + eventId);
+            Log.d("데이터 확인","eventTitle : " + eventTitle);
+            Log.d("데이터 확인","eventDescription : " + eventDescription);
+            Log.d("데이터 확인","eventDTStart : " + eventDTStart);
+            Log.d("데이터 확인","eventDTEnd : " + eventDTEnd);
+            Log.d("데이터 확인","eventTimeZone : " + eventTimeZone);
+        }
+    }
+    public void eventRead2()
+    {
+        AccountManager acctMgr = AccountManager.get(this); // 디바이스에 등록된 사용자계정 전부 불러온다.
+        Account[] accts = acctMgr.getAccounts(); // 사용자 계정들을 저장할 배열.
+        int acctCnt = accts.length; // 저장된 계정의 갯수.
+        Account acct; // 필요한 사용자 계정을 입력할 때 사용할 변수.
+
+        String acctName = "";
+        String acctType = "";
+
+        int row = 0;
+
+        while(row < acctCnt)
+        {
+            acct = accts[row];
+            if(acct.type.equals("com.google"))
+            {
+                acctName += acct.name;
+                acctType += acct.type;
+                break;
+            }
+            row ++;
         }
 
+        final String[] EVENT_PROJECTION1 = new String[]{
+                CalendarContract.Calendars._ID, CalendarContract.Calendars.ACCOUNT_NAME, CalendarContract.Calendars.CALENDAR_DISPLAY_NAME, CalendarContract.Calendars.OWNER_ACCOUNT};
+        Cursor cur = null;
+        ContentResolver cr = getContentResolver();
+        Uri uri = CalendarContract.Calendars.CONTENT_URI;
+        String selection = "((" + CalendarContract.Calendars.ACCOUNT_NAME + " = ?) AND ("
+                + CalendarContract.Calendars.ACCOUNT_TYPE + " = ?) AND ("
+                + CalendarContract.Calendars.OWNER_ACCOUNT + " = ?))";
+        //Log.d("확인용","이름 : " + acctName +"계정 타입 : " + acctType + "계정 이름 : " + acctName); // 여기서 못불러온다....
+        //String[] selectionArgs = new String[]{acctName,acctType,acctName};
+        String[] selectionArgs = new String[] {"aelleek@gmail.com", "com.google","aelleek@gmail.com"};
+
+        cur = cr.query(uri,EVENT_PROJECTION1,selection,selectionArgs,null);
+
+        int test = 0;
+        while(!cur.isLast())
+        {
+            cur.moveToNext();
+            //test = cur.getInt(0);
+            Log.d("확인용",cur.getString(0) + " " + cur.getString(2));
+        }
+    }
+    public void test()
+    {
+        String projection[] = {"_id", "calendar_displayName"};
+        Uri calendars;
+        calendars = Uri.parse("content://com.android.calendar/calendars");
+
+        ContentResolver contentResolver = getContentResolver();
+        Cursor managedCursor = contentResolver.query(calendars, projection, null, null, null);
+
+        if (managedCursor.moveToFirst()){
+            //m_calendars = new MyCalendar[managedCursor.getCount()];
+            String calName;
+            String calID;
+            int cont= 0;
+            int nameCol = managedCursor.getColumnIndex(projection[1]);
+            int idCol = managedCursor.getColumnIndex(projection[0]);
+            do {
+                calName = managedCursor.getString(nameCol);
+                calID = managedCursor.getString(idCol);
+                //Log.d("테스트 용 ", "캘린더 이름 : " + calName + "캘린더 id : " + calID);
+               // m_calendars[cont] = new MyCalendar(calName, calID);
+                cont++;
+            } while(managedCursor.moveToNext());
+            managedCursor.close();
+        }
     }
 }
