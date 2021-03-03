@@ -1,8 +1,10 @@
-package com.example.sprinkleproject;
+package com.example.sprinkleproject.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.sprinkleproject.R;
 
 public class SettingActivity extends AppCompatActivity {
 

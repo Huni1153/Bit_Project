@@ -1,4 +1,4 @@
-package com.example.sprinkleproject;
+package com.example.sprinkleproject.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.preference.SwitchPreference;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+
+import com.example.sprinkleproject.R;
 
 import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;

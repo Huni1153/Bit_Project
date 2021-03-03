@@ -1,16 +1,17 @@
-package com.example.backgroundstt;
+package com.example.sprinkleproject.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.sprinkleproject.R;
 
 import java.util.ArrayList;
-
 
 public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 

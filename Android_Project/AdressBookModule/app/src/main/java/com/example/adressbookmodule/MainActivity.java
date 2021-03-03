@@ -23,6 +23,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 contacts();
                 Iterator<String> itr = data.iterator();
                 while (itr.hasNext()) {
-                    Log.d(cnt + " : ", itr.next());
+                    //Log.d(cnt + " : ", itr.next());
+                    Log.d("", itr.next());
                     cnt++;
                 }
 
@@ -74,11 +76,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String androidId = Settings.Secure.getString(MainActivity.this.getContentResolver(), Settings.Secure.ANDROID_ID);
                 //String deviceId = md5Encode(androidId);
-
-
+                //String androidId = UUID.randomUUID().toString();
+                Log.d("androidId : ",androidId);
                 TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
-                // Log.d("단말기 ID : ", tm.getDeviceId()); // 안드로이드 10 버전이후 부터는 사용불가 ㅠ
+                // Log.d("단말기 ID : ", tm.getDeviceId()); // 안드로이드 10 버전이후 부터는 TelephonyManager를 통해 개인을 특정할 수 있는 정보를 가져올 수 없도록 변경되었음.(전화번호는 예외)
                 // 안드로이드 10버전에 단말기정보 변경사항 참고 자료 https://brunch.co.kr/@huewu/9
 
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED

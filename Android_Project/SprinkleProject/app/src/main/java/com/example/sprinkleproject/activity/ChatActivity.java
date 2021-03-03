@@ -1,7 +1,6 @@
-package com.example.backgroundstt;
+package com.example.sprinkleproject.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MotionEventCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Toast;
+
+import com.example.sprinkleproject.R;
+import com.example.sprinkleproject.adapter.Code;
+import com.example.sprinkleproject.adapter.DataItem;
+import com.example.sprinkleproject.adapter.MyAdapter;
 
 import java.util.ArrayList;
 
@@ -23,7 +24,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        
+
         // 아래의 함수 대신
         // 사용자가 음성 입력을 하면 RIGHT_CONTENT에 메시지를 보내주고,
         // 시스템이 응답할때 TTS와 함께 LEFT_CONTENT에 메시지를 보내준다.
