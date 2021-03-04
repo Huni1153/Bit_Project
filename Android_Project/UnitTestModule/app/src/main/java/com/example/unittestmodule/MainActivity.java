@@ -96,10 +96,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
          /* 사용자 계정정보 얻어오기
                  AccountManager를 통해 핸드폰 안의 사용자 계정을 가지고 온다. */
-        /* ※ android O(오레오)시상 부터는 manifests의 GET_ACCOUNTS 권한만으로는 앱에서 계정정보를 불러올 수 없다...?
+        /* ※ android O(오레오)이상 부터는 manifests의 GET_ACCOUNTS 권한만으로는 앱에서 계정정보를 불러올 수 없다...?
          아니 그럼 api를 수정했어야 되는거 아닙니까?
          그래서 AccountManager.newChooseAccountIntent() 또는 인증자의 특정한 메소드를 사용해야 한다. 그 후에 AccountManager.getAccounts()를 호출하여 계정에 접근할 수 있다.*/
         // 결과 : 이부분도 꼭 필요한 부분이다 밑에 intent에서 한번 계정 정보를 불러왔다면 이 코드만으로도 계정 목록을 불러올 수 있다.
+        // 결과 수정 : 아니었다.. 이 부분은 꼭 필요한 부분이 아니다. 104~126라인의 코드는 기기에 등록되어있는 모든 계정들에 대해 불러오는 정보이고 chooseAccountIntent()함수는 M버전 이후에 새롭게 추가된 함수인것 같다.
+        // 그래서 이방법도 사용 가능하지만 밑에 방법으로 사용자에게 로그인된 계정(구글로 한정했음)들중에서 선택받게 해서 사용할 수 있게 하는 방법을 택했다.
         AccountManager acctMgr = AccountManager.get(this); // 사용자계정 전부를 불러온다.
         Account[] acctArray = acctMgr.getAccounts(); // 사용자 계정들을 배열에 입력
         int acctCnt = acctArray.length;
