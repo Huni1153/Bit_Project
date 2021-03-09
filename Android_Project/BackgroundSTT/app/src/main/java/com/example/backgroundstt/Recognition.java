@@ -66,7 +66,7 @@ public class Recognition extends RecognitionService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("호출순서 : ","1번");
+        System.out.println("여기 오는가?");
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         if (SpeechRecognizer.isRecognitionAvailable(getApplicationContext())) { //시스템에서 음성인식 서비스 실행이 가능하다면
             itIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -193,7 +193,7 @@ public class Recognition extends RecognitionService {
     private RecognitionListener mClsRecoListener = new RecognitionListener() {
         @Override
         public void onRmsChanged(float rmsdB) {
-            // db이 증가하거나 낮아질때 호출 됨
+            // 대시벨이 증가하거나 낮아질때 호출 됨
             Log.d("호출순서 : ","5번");
         }
 

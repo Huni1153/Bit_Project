@@ -10,6 +10,10 @@
     <!-- 사용자 계정 접근 권한 -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
+    <!-- 음성인식 모듈 접근권한 얻기 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,15 +24,27 @@
         <activity android:name=".ChatActivity"
             android:theme="@style/Transparent"
             >
+
+        </activity>
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
 
-        </activity>
+        <service
+            android:name=".Recognition"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.speech.RecognitionService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

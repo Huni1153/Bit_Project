@@ -57,17 +57,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkPermission2();
         findViewById(R.id.main_btn_sttStart).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startService(new Intent(MainActivity.this, Recognition.class));
+                System.out.println("여기 오는가?");
             }
         });
 
         findViewById(R.id.main_btn_sttEnd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(new Intent(MainActivity.this, Recognition.class));
+                stopService(new Intent(MainActivity.this, Recognition.class));
             }
         });
 
@@ -107,7 +109,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void checkPermission2()
+    {
+        //if(ContextCompat.checkSelfPermission("컨텍스트 정보의 자리","요청할 권한") != PackageManager.PERMISSION_GRANTED)
+        // checkSelfPermission()의 리턴값은 요청한 권한이 수락되었을때 PERMISSION_GRANTED를 리턴한다.
+        if(ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CONTACTS) != PackageManager.PERMISSION_GRANTED // Manifest.permission.WRITE_CONTACTS 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED // Manifest.permission.READ_CONTACTS 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED // Manifest.permission.READ_PHONE_STATE 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED // Manifest.permission.CALL_PHONE 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED // Manifest.permission.GET_ACCOUNTS 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED // Manifest.permission.INTERNET 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED // Manifest.permission.RECORD_AUDIO 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED // Manifest.permission.WRITE_CALENDAR 승인되지 않았을 떄
+                || ContextCompat.checkSelfPermission(this,Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {// Manifest.permission.READ_CALENDAR 승인되지 않았을 떄
+            ActivityCompat.requestPermissions(this, Code.PERMISSION_PROJECTION, 0);
+        }
+        else{
+            //이 영역은 권한이 거부되었을 때
+            //권한이 거부되었을 때에 사용자에게 권한 설정을 요구하는 다이얼로그를 띄우기 위해서
+            //requestPermission을 쓴다. requestPermission(액티비티의 정보,String[]의 권한요청명령 ,request 코드)
+            //여기서 리퀘스트 코드는 후에 onRequestPermissionResult() 메서드에 결과물이 전달될 시, 결과물들을 구분 짓는 인덱스
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_CONTACTS)){ // 이곳에 퍼미션을 더 추가해야 한다.
+                //사용자가 다시 보지 않기에 체크를 하지 않고, 권한 설정을 거절한 이력이 있는 경우
+                // 이 경우 계속해서 권한은 묻는건 사용자의 입장이 곤란할 수 있지만 그렇다고 사용에 꼭 필요한 권한일 경우 묻지 않을 수 없다.
+                // 그렇기 때문에 한번 취소했던 이력이 있는 경우 이것에 대해 설명해주는 Notice를 주는 등, 여러가지 작업을 생각해서 작성해보자.
 
+            }else{
+                //사용자가 다시 보지 않기에 체크하고, 권한 설정을 거절한 이력이 있는 경우
+
+            }
+            //사용자에게 권한 요청 다이얼로그를 띄우는데 만약 사용자가 다시 보지 않기에 체크를  했을 경우
+            //곧바로 onRequestPermissionResult가 실행된다.
+            ActivityCompat.requestPermissions(this, Code.PERMISSION_PROJECTION,0);
+        }
+    }
 
     public boolean checkPermission()
     {
