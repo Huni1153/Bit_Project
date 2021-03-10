@@ -11,6 +11,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Adapter;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -18,6 +23,11 @@ import java.util.ArrayList;
 public class ChatActivity extends AppCompatActivity {
 
     private ArrayList<DataItem> dataList;
+    private EditText inputData;
+    private Button inputBtn;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager manager;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,20 +39,35 @@ public class ChatActivity extends AppCompatActivity {
         // 시스템이 응답할때 TTS와 함께 LEFT_CONTENT에 메시지를 보내준다.
         this.initializeData();
 
-        RecyclerView recyclerView = findViewById(R.id.chat_rView_recyclerView);
+        recyclerView = findViewById(R.id.chat_rView_recyclerView);
 
-        LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
+        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
 
         recyclerView.setLayoutManager(manager); // LayoutManager 등록
+//        adapter = new MyAdapter(dataList);
+//        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(new MyAdapter(dataList));  // Adapter 등록
+
+        inputData = (EditText)findViewById(R.id.chat_et_inputText);
+        inputBtn = (Button)findViewById(R.id.chat_btn_inputBtn);
+
+        inputBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userText(inputData.getText().toString());
+                inputData.setText("");
+            }
+        });
     }
 
     public void initializeData()
     {
-        dataList = new ArrayList<>();
-
-        dataList.add(new DataItem("여긴 비서가 음성으로 말하면서 출력될 말풍선 입니다.",  Code.ViewType.LEFT_CONTENT));
-        dataList.add(new DataItem("여긴 우리가 음성으로 말하면 출력될 말풍선 입니다.",   Code.ViewType.RIGHT_CONTENT));
+        //dataList.add(new DataItem("여긴 비서가 음성으로 말하면서 출력될 말풍선 입니다.",  Code.ViewType.LEFT_CONTENT));
+        //dataList.add(new DataItem("여긴 우리가 음성으로 말하면 출력될 말풍선 입니다.",   Code.ViewType.RIGHT_CONTENT));
+    }
+    public void userText(String voiceData)
+    {
+        dataList.add(new DataItem(voiceData,Code.ViewType.RIGHT_CONTENT));
     }
 
     @Override
