@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener
+public class MainActivity extends AppCompatActivity
 {
 
     private TextToSpeech tts;
@@ -25,12 +25,33 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tts = new TextToSpeech(this, this);
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS)
+                {
+                    int result = tts.setLanguage(Locale.KOREA);
+                    if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
+                    {
+                        Log.e("TTS", "This Language is not supported");
+                    }
+                    else
+                    {
+                        btn_Speak.setEnabled(true);
+                        //speakOut();
+                    }
+                }
+                else
+                {
+                    Log.e("TTS", "Initilization Failed!");
+                }
+            }
+        });
         btn_Speak = findViewById(R.id.btnSpeak);
         txtText = findViewById(R.id.txtText);
 
         btn_Speak.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
             @Override
             public void onClick(View v)
             {
@@ -39,12 +60,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void speakOut()
     {
-        CharSequence text = txtText.getText();
-        tts.setPitch((float) 0.6);
-        tts.setSpeechRate((float) 0.1);
+        CharSequence text = "이건 테스트야 되야해";
+        tts.setPitch((float) 1.0);
+        tts.setSpeechRate((float) 0.95);
         tts.speak(text,TextToSpeech.QUEUE_FLUSH,null,"id1");
     }
     @Override
@@ -56,29 +76,5 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             tts.shutdown();
         }
         super.onDestroy();
-    }
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-
-    @Override
-    public void onInit(int status)
-    {
-
-        if (status == TextToSpeech.SUCCESS)
-        {
-            int result = tts.setLanguage(Locale.KOREA);
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
-            {
-                Log.e("TTS", "This Language is not supported");
-            }
-            else
-            {
-                btn_Speak.setEnabled(true);
-                speakOut();
-            }
-        }
-        else
-        {
-            Log.e("TTS", "Initilization Failed!");
-        }
     }
 }
